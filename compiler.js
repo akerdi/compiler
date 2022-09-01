@@ -154,10 +154,10 @@ function aster(tokens) {
   }
   let ast = {
     type: ">",
-    body: []
+    children: []
   }
   while (current < tokens.length) {
-    ast.body.push(walk())
+    ast.children.push(walk())
   }
   return ast
 }
