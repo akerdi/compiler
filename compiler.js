@@ -1,79 +1,79 @@
-'use strict';
+"use strict";
 
 function tokenizer(input) {
   let current = 0;
-  let tokens = [];
+  const tokens = [];
   while (current < input.length) {
     let char = input[current];
-    if (char === '(') {
+    if (char === "(") {
       tokens.push({
-        type: 'sexpr',
-        value: '(',
+        type: "semi",
+        value: "(",
       });
       current++;
       continue;
     }
-    if (char === ')') {
+    if (char === ")") {
       tokens.push({
-        type: 'sexpr',
-        value: ')',
+        type: "semi",
+        value: ")",
       });
       current++;
       continue;
     }
-    if (char === '{') {
+    if (char === "{") {
       tokens.push({
-        type: 'qexpr',
-        value: '{',
+        type: "quote",
+        value: "{",
       });
       current++;
       continue;
     }
-    if (char === '}') {
+    if (char === "}") {
       tokens.push({
-        type: 'qexpr',
-        value: '}',
+        type: "quote",
+        value: "}",
       });
       current++;
       continue;
     }
-    let WHITESPACE = /\s/;
+    const WHITESPACE = /\s/;
     if (WHITESPACE.test(char)) {
       current++;
       continue;
     }
-    let NUMBERS = /[0-9]/;
+    const NUMBERS = /[0-9]/;
     if (NUMBERS.test(char)) {
-      let value = '';
+      let value = "";
       while (NUMBERS.test(char) && current < input.length) {
         value += char;
         char = input[++current];
       }
-      tokens.push({ type: 'number', value });
+      tokens.push({ type: "number", value });
       continue;
     }
     if (char === '"') {
-      let value = '';
+      let value = "";
       char = input[++current];
       while (char !== '"' && current < input.length) {
         value += char;
         char = input[++current];
       }
       char = input[++current];
-      tokens.push({ type: 'string', value });
-      continue
+      tokens.push({ type: "string", value });
+      continue;
     }
-    let LETTERS = /[a-z+\-\*\/\\&]/i;
+    const LETTERS = /[a-z+\-\*\/\\&]/i;
     if (LETTERS.test(char)) {
-      let value = '';
+      let value = "";
       while (LETTERS.test(char) && current < input.length) {
         value += char;
         char = input[++current];
       }
-      tokens.push({ type: 'symbol', value });
+      tokens.push({ type: "symbol", value });
       continue;
     }
-    throw new TypeError('I dont know what this character is: ' + char)
+    throw new TypeError("I dont know what this character is: " + char);
   }
   return tokens;
 }
@@ -81,94 +81,97 @@ function tokenizer(input) {
 function aster(tokens) {
   let current = 0;
   function walk() {
-    let token = tokens[current]
+    const token = tokens[current];
     if (token.type === "symbol") {
       current++;
       return {
         type: token.type,
-        content: token.value
-      }
+        content: token.value,
+      };
     }
     if (token.type === "number") {
       current++;
       return {
         type: token.type,
-        content: token.value
-      }
+        content: token.value,
+      };
     }
     if (token.type === "string") {
       current++;
       return {
         type: token.type,
-        content: token.value
-      }
+        content: token.value,
+      };
     }
-    if (token.type === "sexpr" && token.value === "(") {
-      let node = {
-        type: token.type,
-        children: [{
-          type: "symbol",
-          content: token.value,
-        }]
-      }
-      token = tokens[++current]
+    if (token.type === "semi" && token.value === "(") {
+      const node = {
+        type: "sexpr",
+        children: [
+          {
+            type: "symbol",
+            content: token.value,
+          },
+        ],
+      };
+      token = tokens[++current];
       while (
-        (token.type !== 'sexpr') ||
-        (token.type === 'sexpr') && token.value !== ')'
+        token.type !== "semi" ||
+        (token.type === "semi" && token.value !== ")")
       ) {
         node.children.push(walk());
-        token = tokens[current]
+        token = tokens[current];
       }
       node.children.push({
         type: "symbol",
-        content: ")"
-      })
+        content: ")",
+      });
       current++;
-      return node
+      return node;
     }
-    if (token.type === "qexpr" && token.value === "{") {
-      let node = {
-        type: token.type,
-        children: [{
-          type: "symbol",
-          content: token.value,
-        }]
-      }
-      token = tokens[++current]
+    if (token.type === "quote" && token.value === "{") {
+      const node = {
+        type: "qexpr",
+        children: [
+          {
+            type: "symbol",
+            content: token.value,
+          },
+        ],
+      };
+      token = tokens[++current];
       while (
-        (token.type !== "qexpr") ||
-        (token.type === "qexpr") && token.value !== "}"
+        token.type !== "quote" ||
+        (token.type === "quote" && token.value !== "}")
       ) {
         node.children.push(walk());
-        token = tokens[current]
-        console.log("current token is qexpr close: " + token.value)
+        token = tokens[current];
       }
       node.children.push({
         type: "symbol",
-        content: "}"
-      })
+        content: "}",
+      });
       current++;
-      return node
+      return node;
     }
-    throw new TypeError(token.type)
+    throw new TypeError(token.type);
   }
-  let ast = {
+  const ast = {
     type: ">",
-    children: []
-  }
+    children: [],
+  };
   while (current < tokens.length) {
-    ast.children.push(walk())
+    ast.children.push(walk());
   }
-  return ast
+  return ast;
 }
 
 function compiler(input) {
-  let tokens = tokenizer(input)
-  return aster(tokens)
+  const tokens = tokenizer(input);
+  return aster(tokens);
 }
 
 module.exports = {
   tokenizer,
   aster,
-  compiler
-}
+  compiler,
+};
