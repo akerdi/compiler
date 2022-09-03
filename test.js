@@ -1,11 +1,50 @@
-const {
-  tokenizer,
-  aster,
-  compiler
-} = require("./compiler")
+const { tokenizer, aster, compiler } = require("./compiler");
+
+// const input = 'if (+ x y) { * 890909 9 } { / 9 3 }'
+
+// tokenizer:
+// [{type:"symbol", value:"if"}, {type:semi, value:"("}, {type:"symbol", value: "+"}, {type:"symbol", value:"x"}, {type:"symbol", value:"y"}]
+// aster:
+/**
+  {
+    type: ">",
+    children: [
+      {type: "symbol", content: "if"},
 
 
-// const input = 'if (+ x y) { * 8 9 } { / 9 3 }'
+      {
+        type: "sexpr",
+        children: [
+          {type: "symbol", content: "("},
+          {type: "symbol", content: "+"},
+          {type: "symbol", content: "x"},
+          {type: "symbol", content: "y"},
+          {type: "symbol", content: ")"},
+        ]
+      },
+      {
+        type: "qexpr",
+        children: [
+          {type: "symbol", content: "{"},
+          {type: "symbol", content: "*"},
+          {type: "number", content: "890909"},
+          {type: "number", content: "9"},
+          {type: "symbol", content: "}"},
+        ]
+      },
+      {
+        type: "qexpr",
+        children: [
+          {type: "symbol", content: "{"},
+          {type: "symbol", content: "/"},
+          {type: "number", content: "9"},
+          {type: "number", content: "3"},
+          {type: "symbol", content: "}"},
+        ]
+      }
+    ]
+  }
+ */
 // const input = "(add 2 (subtract 4 2))"
 // const input = "+ 1 2"
 // const input = "if (+ x y) { * 8 9 } { / 9 3 }"
@@ -32,9 +71,9 @@ const {
 // const input = "def {uncurry} pack"
 // const input = "def {add-curried} (curry +)"
 // const input = "print \"Hello World!\""
-const input = "load \"hello.lspy\""
+const input = 'load "hello.lspy"';
 
 // const tokens = tokenizer(input)
 // const ast = aster(tokens)
-const ast = compiler(input)
-console.log("ast: ", JSON.stringify(ast))
+const ast = compiler(input);
+console.log("ast: ", JSON.stringify(ast));
