@@ -81,7 +81,7 @@ function tokenizer(input) {
 function aster(tokens) {
   let current = 0;
   function walk() {
-    const token = tokens[current];
+    let token = tokens[current];
     if (token.type === "symbol") {
       current++;
       return {
@@ -108,7 +108,7 @@ function aster(tokens) {
         type: "sexpr",
         children: [
           {
-            type: "symbol",
+            type: token.type,
             content: token.value,
           },
         ],
@@ -122,7 +122,7 @@ function aster(tokens) {
         token = tokens[current];
       }
       node.children.push({
-        type: "symbol",
+        type: "semi",
         content: ")",
       });
       current++;
@@ -133,7 +133,7 @@ function aster(tokens) {
         type: "qexpr",
         children: [
           {
-            type: "symbol",
+            type: token.type,
             content: token.value,
           },
         ],
@@ -147,7 +147,7 @@ function aster(tokens) {
         token = tokens[current];
       }
       node.children.push({
-        type: "symbol",
+        type: "quote",
         content: "}",
       });
       current++;
