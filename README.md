@@ -1,6 +1,6 @@
 # Compiler
 
-为之后项目: buildyourownlispy js版本做词法分析和ast
+为之后项目: buildyourownlispy js 版本做词法分析和 ast
 
 用法:
 
@@ -8,3 +8,5 @@
     const ast = compiler(input)
 
 更具体见[test.js](test.js)
+
+## [词法分析&AST 教程](./tech/README.md)
