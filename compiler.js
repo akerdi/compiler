@@ -49,31 +49,32 @@ function tokenizer(input) {
         value += char;
         char = input[++current];
       }
-      tokens.push({ type: "number", value });
+      tokens.push({ type: "num[]", value });
       continue;
     }
-    if (char === '"') {
+    const CHAR = '"';
+    if (char === CHAR) {
       let value = "";
       char = input[++current];
-      while (char !== '"' && current < input.length) {
+      while (char !== CHAR && current < input.length) {
         value += char;
         char = input[++current];
       }
       char = input[++current];
-      tokens.push({ type: "string", value });
+      tokens.push({ type: "char[]", value });
       continue;
     }
-    const LETTERS = /[a-z+\-\*\/\\&]/i;
+    const LETTERS = /[a-zA-Z0-9_+\-*\/=<>!&]+/i;
     if (LETTERS.test(char)) {
       let value = "";
       while (LETTERS.test(char) && current < input.length) {
         value += char;
         char = input[++current];
       }
-      tokens.push({ type: "symbol", value });
+      tokens.push({ type: "letter[]", value });
       continue;
     }
-    throw new TypeError("I dont know what this character is: " + char);
+    throw new TypeError("未识别的类型: " + char);
   }
   return tokens;
 }
@@ -82,24 +83,24 @@ function aster(tokens) {
   let current = 0;
   function walk() {
     let token = tokens[current];
-    if (token.type === "symbol") {
+    if (token.type === "letter[]") {
       current++;
       return {
-        type: token.type,
+        type: "symbol",
         content: token.value,
       };
     }
-    if (token.type === "number") {
+    if (token.type === "num[]") {
       current++;
       return {
-        type: token.type,
+        type: "number",
         content: token.value,
       };
     }
-    if (token.type === "string") {
+    if (token.type === "char[]") {
       current++;
       return {
-        type: token.type,
+        type: "string",
         content: token.value,
       };
     }
@@ -121,11 +122,11 @@ function aster(tokens) {
         node.children.push(walk());
         token = tokens[current];
       }
+      current++;
       node.children.push({
         type: "semi",
         content: ")",
       });
-      current++;
       return node;
     }
     if (token.type === "quote" && token.value === "{") {

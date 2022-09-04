@@ -3,7 +3,21 @@ const { tokenizer, aster, compiler } = require("./compiler");
 // const input = 'if (+ x y) { * 890909 9 } { / 9 3 }'
 
 // tokenizer:
-// [{type:"symbol", value:"if"}, {type:semi, value:"("}, {type:"symbol", value: "+"}, {type:"symbol", value:"x"}, {type:"symbol", value:"y"}]
+/**
+[
+  {type:"letter[]", value:"if"},
+  {type:"semi", value:"("},
+    {type:"letter[]", value: "+"}, {type:"letter[]", value:"x"}, {type:"letter[]", value:"y"},
+  {type:"semi", value:")"},
+  {type:"quote", value:"{"},
+    {type:"letter[]", value="*"}, {type:"num[]", value:"890909"}, {type:"num[]", value:"9"},
+  {type:"quote", value:"}"},
+  {type:"quote", value:"{"},
+    {type: "letter[]", value:"/"}, {type:"num[]", value:"9"}, {type:"num[]", value:"3"},
+  {type:"quote",value:"}"}
+]
+ */
+
 // aster:
 /**
   {
