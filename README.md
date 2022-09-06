@@ -1,6 +1,6 @@
 # Compiler
 
-为之后项目: buildyourownlispy js 版本做词法分析和 ast
+词法分析和 ast
 
 用法:
 
