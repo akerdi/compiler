@@ -64,7 +64,7 @@ function tokenizer(input) {
       tokens.push({ type: "char[]", value });
       continue;
     }
-    const LETTERS = /[a-zA-Z0-9_+\-*\/=<>!&]+/i;
+    const LETTERS = /[a-zA-Z0-9_+\-*\/=<>!&\\]+/i;
     if (LETTERS.test(char)) {
       let value = "";
       while (LETTERS.test(char) && current < input.length) {
