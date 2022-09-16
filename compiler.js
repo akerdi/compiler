@@ -1,5 +1,11 @@
 "use strict";
 
+const LETTERS = /[a-zA-Z0-9_+\-*\/=<>!&\\]+/i;
+const NUMBERS = /[0-9]/;
+const CHAR = '"';
+const WHITESPACE = /\s/;
+const COMMENT = ";"
+
 function tokenizer(input) {
   let current = 0;
   const tokens = [];
@@ -37,12 +43,10 @@ function tokenizer(input) {
       current++;
       continue;
     }
-    const WHITESPACE = /\s/;
     if (WHITESPACE.test(char)) {
       current++;
       continue;
     }
-    const NUMBERS = /[0-9]/;
     if (NUMBERS.test(char)) {
       let value = "";
       while (NUMBERS.test(char) && current < input.length) {
@@ -52,7 +56,6 @@ function tokenizer(input) {
       tokens.push({ type: "num[]", value });
       continue;
     }
-    const CHAR = '"';
     if (char === CHAR) {
       let value = "";
       char = input[++current];
@@ -64,7 +67,20 @@ function tokenizer(input) {
       tokens.push({ type: "char[]", value });
       continue;
     }
-    const LETTERS = /[a-zA-Z0-9_+\-*\/=<>!&\\]+/i;
+    if (char === COMMENT) {
+      let value = "";
+      char = input[++current];
+      while (WHITESPACE.test(char)) {
+        char = input[++current];
+      }
+      while ((char !== "\r\n" && char !== "\n") && current < input.length) {
+        value += char;
+        char = input[++current];
+      }
+      char = input[++current];
+      tokens.push({ type: "comment", value });
+      continue;
+    }
     if (LETTERS.test(char)) {
       let value = "";
       while (LETTERS.test(char) && current < input.length) {
@@ -83,6 +99,13 @@ function aster(tokens) {
   let current = 0;
   function walk() {
     let token = tokens[current];
+    if (token.type === "comment") {
+      current++;
+      return {
+        type: token.type,
+        content: token.value,
+      };
+    }
     if (token.type === "letter[]") {
       current++;
       return {
@@ -170,9 +193,15 @@ function compiler(input) {
   const tokens = tokenizer(input);
   return aster(tokens);
 }
+function loadfile(filepath) {
+  const fs = require('fs')
+  const data = fs.readFileSync(filepath, {encoding: 'utf-8'})
+  return compiler(data)
+}
 
 module.exports = {
   tokenizer,
   aster,
   compiler,
+  loadfile,
 };
