@@ -4,7 +4,7 @@ const LETTERS = /[a-zA-Z0-9_+\-*\/=<>!&\\]+/i;
 const NUMBERS = /[0-9]/;
 const CHAR = '"';
 const WHITESPACE = /\s/;
-const COMMENT = ";"
+const COMMENT = ";";
 
 function tokenizer(input) {
   let current = 0;
@@ -59,10 +59,12 @@ function tokenizer(input) {
     if (char === CHAR) {
       let value = "";
       char = input[++current];
+      value += char;
       while (char !== CHAR && current < input.length) {
         value += char;
         char = input[++current];
       }
+      value += char;
       char = input[++current];
       tokens.push({ type: "char[]", value });
       continue;
@@ -73,7 +75,7 @@ function tokenizer(input) {
       while (WHITESPACE.test(char)) {
         char = input[++current];
       }
-      while ((char !== "\r\n" && char !== "\n") && current < input.length) {
+      while (char !== "\r\n" && char !== "\n" && current < input.length) {
         value += char;
         char = input[++current];
       }
@@ -194,9 +196,9 @@ function compiler(input) {
   return aster(tokens);
 }
 function loadfile(filepath) {
-  const fs = require('fs')
-  const data = fs.readFileSync(filepath, {encoding: 'utf-8'})
-  return compiler(data)
+  const fs = require("fs");
+  const data = fs.readFileSync(filepath, { encoding: "utf-8" });
+  return compiler(data);
 }
 
 module.exports = {
