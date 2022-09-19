@@ -4,8 +4,15 @@
 
 用法:
 
-    const input = "your input"
-    const ast = compiler(input)
+```js
+const compiler = require('compiler')
+
+const input = "eval { head { 1 2 3 4} }"
+const ast = compiler.compiler(input)
+
+// 或者
+const ast = compiler.loadfile("hello.lsp")
+```
 
 更具体见[test.js](test.js)
 
