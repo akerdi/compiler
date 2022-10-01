@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "nodemon --watch '**/*.js' --ignore '**/*.test.*' --exec 'TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true ts-node --files -r tsconfig-paths/register' testcc.js"
+    "dev": "nodemon --watch '**/*.js' --ignore '**/*.test.*' --exec 'ts-node --files -r tsconfig-paths/register' test.js"
   },
   "main": "aa.js",
   "author": "",
