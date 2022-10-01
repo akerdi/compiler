@@ -59,12 +59,10 @@ function tokenizer(input) {
     if (char === CHAR) {
       let value = "";
       char = input[++current];
-      value += char;
       while (char !== CHAR && current < input.length) {
         value += char;
         char = input[++current];
       }
-      value += char;
       char = input[++current];
       tokens.push({ type: "char[]", value });
       continue;
@@ -140,10 +138,7 @@ function aster(tokens) {
         ],
       };
       token = tokens[++current];
-      while (
-        token.type !== "semi" ||
-        (token.type === "semi" && token.value !== ")")
-      ) {
+      while (token.type !== "semi" || (token.type === "semi" && token.value !== ")")) {
         node.children.push(walk());
         token = tokens[current];
       }
@@ -165,10 +160,7 @@ function aster(tokens) {
         ],
       };
       token = tokens[++current];
-      while (
-        token.type !== "quote" ||
-        (token.type === "quote" && token.value !== "}")
-      ) {
+      while (token.type !== "quote" || (token.type === "quote" && token.value !== "}")) {
         node.children.push(walk());
         token = tokens[current];
       }

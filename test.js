@@ -85,7 +85,7 @@ const { tokenizer, aster, compiler } = require("./compiler");
 // const input = "def {uncurry} pack"
 // const input = "def {add-curried} (curry +)"
 // const input = "print \"Hello World!\""
-const input = 'load "hello.lspy"';
+const input = 'load "hello.lspy" 111 22 load';
 
 // const tokens = tokenizer(input)
 // const ast = aster(tokens)
